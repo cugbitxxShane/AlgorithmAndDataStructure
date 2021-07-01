@@ -1,0 +1,68 @@
+#include<iostream>
+using namespace std;
+
+//堆排序，从最后一个非叶子节点往上构建.
+
+
+void swap(int s[],int i,int j)
+{
+    int tmp;
+    tmp = s[i];
+    s[i] = s[j];
+    s[j] = tmp;
+}
+
+
+//错误1：if(c1 < n && tree[c1] > tree[maxIndex] ) 写成了 if(c1 < n && tree[c1] > tree[i] )
+//错误2: if(c1 < n  不是 if(c1 <= n ，注意看哈
+//错误3：buildHeap(tree,n) 没有放在heapSort()函数里面
+//错误4：heapSort()函数的for循环里面，应该是heapify(tree,i,0)，而不是heapify(tree,n,0);
+
+void heapify(int tree[],int n,int i){
+    if(i >= n) return ;
+    int maxIndex = i;  //最大索引元素
+    int c1 = 2*i + 1; //左子树的索引
+    int c2 = 2*i + 2;  //右子树的索引
+    if(c1 < n && tree[c1] > tree[maxIndex] ){  //如果左子树大于节点，则认为最大值的索引是左子树的索引
+        maxIndex = c1;
+    }
+    if(c2 < n && tree[c2] > tree[maxIndex]){ //如果右子树大于节点，则认为最大值的索引是右子树的索引
+        maxIndex = c2;
+    }
+    if(maxIndex != i){
+        swap(tree,maxIndex,i);
+        heapify(tree,n,maxIndex);
+    }
+}
+
+void buildHeap(int tree[],int n){ //从最后一个非叶子节点开始构建初始的大顶堆。
+    int lastNode = n-1;
+    int parentNode = (lastNode - 1)/2;
+    int i;
+    for( i=parentNode; i>=0; i--){
+        heapify(tree,n,i);
+    }
+}
+
+void heapSort(int tree[],int n){
+    buildHeap(tree,n);
+    int i;
+    for( i=n-1; i>=0; i--){
+        swap(tree,i,0);
+        heapify(tree,i,0);
+    }
+}
+
+int main()
+{
+    int tree[]={9,8,99,66,2,7,54,45,32,76,83,26};
+    int i,j;
+    int n=12;
+
+    heapSort(tree,12);
+
+    for (i=0;i < 12;i++)
+        cout<<tree[i]<<" ";
+    cout<<endl;
+    return 0;
+}
