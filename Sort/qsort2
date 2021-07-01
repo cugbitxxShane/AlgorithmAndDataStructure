@@ -1,0 +1,62 @@
+#include<iostream>
+
+using namespace std;
+
+//快排版本2
+//挖坑填数和分治递归写在一起了
+
+void quickSort(int s[],int left,int right){
+
+    if(left<right){
+
+        int pValue = s[left];
+        //这两句很重要的，因为left和right后面会改变，所以要用i和j去记录他们最开始的值
+        int i = left;
+        int j = right;
+
+        while(left<right){
+
+            while(left<right){ //从右边元素开始遍历
+                if(s[right] > pValue){ //右边元素大于轴点元素
+                    right--;
+                }
+                else{   //右边元素小于轴点元素
+                    s[left] = s[right];
+                    left++;   //先填数，然后left元素位置右移
+                    break;  //保证执行上面两条挖坑填数语句之后，换方向遍历，也就是让left开始游走，执行下面的while
+                }
+            }
+
+            while(left<right){
+                if(s[left]<pValue){
+                    left++;
+                }
+                else{
+                    s[right] = s[left];
+                    right--;
+                    break; //保证执行上面两条挖坑填数语句之后，换方向遍历，也就是让right开始游走，执行上面的while
+                }
+            }
+        }
+
+        s[right] = pValue; //也可以写成s[left] = pValue;
+        int pivot = right; //这句话是为了增加可读性的，也可以写成int pivot = left;
+
+        quickSort(s,i,pivot-1);
+        quickSort(s,pivot+1,j);
+    }
+}
+
+int main()
+{
+    int s[10] = {2,3,5,4,1,6,9,8,7,10};
+    for(int i=0;i<10;i++){
+        cout<<s[i];
+    }
+    cout<<endl;
+    quickSort(s,0,9);
+    for(int i=0;i<10;i++){
+        cout<<s[i];
+    }
+    return 0;
+}
