@@ -1,0 +1,72 @@
+#include<iostream>
+
+using namespace std;
+
+//快排第一版
+
+//挖坑填数
+int findPivot(int s[],int left,int right){
+    int pValue;
+    pValue = s[left];
+    while(left<right){
+
+        while(left<right){ //从右边元素开始遍历
+            if(s[right] > pValue){ //右边元素大于轴点元素
+                right--;
+            }
+            else{   //右边元素小于轴点元素
+                s[left] = s[right];
+                left++;   //先填数，然后left元素位置右移
+                break;  //保证执行上面两条挖坑填数语句之后，换方向遍历，也就是让left开始游走，执行下面的while
+            }
+        }
+
+        while(left<right){
+            if(s[left]<pValue){
+                left++;
+            }
+            else{
+                s[right] = s[left];
+                right--;
+                break; //保证执行上面两条挖坑填数语句之后，换方向遍历，也就是让right开始游走，执行上面的while
+            }
+        }
+    }
+
+    s[right] = pValue; //也可以写成s[left] = pValue;
+    return right;
+}
+
+
+//递归分治
+void quickSort(int s[],int left,int right){
+    if(right - left <= 0){   //这里之前写的是<2,也就是<=1，是写错了，我是看那个教程写的，现在发现根本不是这么一回事。
+        return;
+    }
+    /* //也可以写成下面这个：
+    if(right <= left){   //注意这里是right<=left，不是left<right,可以才考v2和v3的代码，
+                         //在v2和v3中，我们会发现只有left<right的时候才能进入递归，
+                         //所以right<=left就表示不进入递归，而是要逃出递归，进行return。
+        return;
+    }*/
+    int pivot = findPivot(s,left,right);
+    quickSort(s,left,pivot-1);
+    quickSort(s,pivot+1,right);
+}
+
+
+int main()
+{
+    int s[10] = {2,3,5,4,1,6,9,8,7,10};
+    //int s[2] = {2,1};
+    int n = 10;
+    for(int i=0;i<n;i++){
+        cout<<s[i];
+    }
+    cout<<endl;
+    quickSort(s,0,n-1);
+    for(int i=0;i<n;i++){
+        cout<<s[i];
+    }
+    return 0;
+}
